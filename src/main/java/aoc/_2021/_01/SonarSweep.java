@@ -16,12 +16,14 @@ import java.util.Scanner;
 
 public class SonarSweep {
 
+	private static final Logger LOGGER = Logger.getLogger(SonarSweep.class.getName());
+
 	public static void main(final String[] args) throws IOException {
 		final List<Integer> depths = loadDepths(args[0]);
 		final int windowSize = Integer.parseInt(args[1]);
 		final int countOfIncreases = countSlidingScaleIncreases(depths, windowSize);
-		Logger.getGlobal().setLevel(Level.INFO);
-		Logger.getGlobal().log(Level.INFO, "Count of Increases: {0}", countOfIncreases);
+		LOGGER.setLevel(Level.INFO);
+		LOGGER.log(Level.INFO, "Count of Increases: {0}", countOfIncreases);
 	}
 
 	public static List<Integer> loadDepths(final String filePath) throws IOException {
