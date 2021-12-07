@@ -1,18 +1,11 @@
 package aoc._2021._01;
 
+import aoc.utils.FileUtil;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class SonarSweep {
 
@@ -27,16 +20,8 @@ public class SonarSweep {
 	}
 
 	public static List<Integer> loadDepths(final String filePath) throws IOException {
-		final ArrayList<Integer> result = new ArrayList<>();
-
-		try (InputStream inputStream = Files.newInputStream(Paths.get(filePath));
-			 Scanner scanner = new Scanner(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
-			while (scanner.hasNext()) {
-				result.add(scanner.nextInt());
-			}
-		}
-
-		return result;
+		final List<String> fileContents = FileUtil.loadFile(filePath);
+		return FileUtil.convertList(fileContents, Integer::parseInt);
 	}
 
 	public static int countIncreases(final Iterable<Integer> depths) {
@@ -46,7 +31,6 @@ public class SonarSweep {
 			if (previousDepth != null && currentDepth.compareTo(previousDepth) > 0) {
 				increases++;
 			}
-
 			previousDepth = currentDepth;
 		}
 

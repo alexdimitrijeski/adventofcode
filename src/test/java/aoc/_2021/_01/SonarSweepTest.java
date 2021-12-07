@@ -1,5 +1,6 @@
 package aoc._2021._01;
 
+import aoc.utils.FileUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -7,10 +8,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Scanner;
+import java.util.List;
 import java.util.logging.Handler;
 import java.util.logging.Logger;
 import java.util.logging.StreamHandler;
@@ -23,11 +22,15 @@ class SonarSweepTest {
 	private static final String FILE_PATH = "src/test/resources/2021/01/SonarSweep/example.txt";
 
 	private static final Logger LOGGER = Logger.getLogger(SonarSweep.class.getName());
-	private ByteArrayOutputStream logCapturingStream;
-	private StreamHandler customLogHandler;
+	private transient ByteArrayOutputStream logCapturingStream;
+	private transient StreamHandler customLogHandler;
 
 	@BeforeEach
-	public void attachLogCapture() {
+	void setUp() {
+		attachLogCapture();
+	}
+
+	private void attachLogCapture() {
 		logCapturingStream = new ByteArrayOutputStream();
 		Handler[] handlers = LOGGER.getParent().getHandlers();
 		customLogHandler = new StreamHandler(logCapturingStream, handlers[0].getFormatter());
@@ -51,13 +54,8 @@ class SonarSweepTest {
 
 	@Test
 	void givenExampleFileWhenLoadedThenExpectResult() throws IOException {
-		final ArrayList<Integer> expectedResults = new ArrayList<>();
-
-		try (Scanner scanner = new Scanner(Files.newBufferedReader(Paths.get(FILE_PATH)))) {
-			while (scanner.hasNext()) {
-				expectedResults.add(scanner.nextInt());
-			}
-		}
+		final List<String> fileContents = FileUtil.loadFile(FILE_PATH);
+		final List<Integer> expectedResults = FileUtil.convertList(fileContents, Integer::parseInt);
 
 		final ArrayList<Integer> results = (ArrayList<Integer>) SonarSweep.loadDepths(FILE_PATH);
 
